@@ -22,7 +22,7 @@
    <widget class="QPushButton" name="btnDoSR">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>400</x>
       <y>340</y>
       <width>111</width>
       <height>51</height>
@@ -138,7 +138,7 @@ padding: 6px;</string>
    <widget class="QPushButton" name="bthSaveResult">
     <property name="geometry">
      <rect>
-      <x>630</x>
+      <x>640</x>
       <y>340</y>
       <width>111</width>
       <height>51</height>
@@ -152,6 +152,20 @@ padding: 6px;</string>
     <property name="text">
      <string>Сохранить
 результат</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnChooseImage">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>340</y>
+      <width>121</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Выбрать
+изображение</string>
     </property>
    </widget>
   </widget>
