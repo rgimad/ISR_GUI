@@ -83,7 +83,7 @@
      </property>
     </item>
    </widget>
-   <widget class="QPushButton" name="bthSaveResult">
+   <widget class="QPushButton" name="btnSaveResult">
     <property name="geometry">
      <rect>
       <x>700</x>
