@@ -74,12 +74,12 @@
     </property>
     <item>
      <property name="text">
-      <string>SRGAN</string>
+      <string>FSRCNN</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>FSRCNN</string>
+      <string>SRGAN</string>
      </property>
     </item>
    </widget>
