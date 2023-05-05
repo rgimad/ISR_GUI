@@ -34,7 +34,8 @@ class MainWindow(QMainWindow):
         if filename:
             # print(filename)
             self.input_image_filename = filename
-            pixmap = QPixmap(filename)
+            # pixmap = QPixmap(filename)
+            pixmap = QPixmap.fromImage(QPixmap.toImage(QPixmap(filename)).convertToFormat(QtGui.QImage.Format_Grayscale8))
             self.labelInputImage.setPixmap(pixmap)
             self.scrollAreaInputImage.setWidget(self.labelInputImage)
             # self.labelOutputImage.clear() #!!
@@ -49,24 +50,27 @@ class MainWindow(QMainWindow):
         if out_pixmap is not None and filename:
             out_pixmap.save(filename)
 
+    def do_bicubic(self):
+        # do bicubic interpolation:
+        # assume label1 is the input QLabel and label2 is the output QLabel
+        pixmap1 = self.labelInputImage.pixmap()
+        img1 = pixmap1.toImage()
+        # upsample img1 using bicubic interpolation
+        img2 = QImage(img1.width() * 2, img1.height() * 2, QImage.Format_Grayscale8)
+        scaled_img = img1.scaled(img2.width(), img2.height(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        img2 = scaled_img.convertToFormat(QImage.Format_Grayscale8)
+        # create a QPixmap from img2 and set it to label2
+        pixmap2 = QPixmap.fromImage(img2)
+        self.labelBicubicImage.setPixmap(pixmap2)
+        self.scrollAreaBicubicImage.setWidget(self.labelBicubicImage)
+
     def do_super_resolution(self):
         model_name = self.cbChooseModel.currentText()
         if self.input_image_filename == None:
             QMessageBox.about(self, "Ошибка", "Сначала выберите исходное изображение")
             return
         
-        # do bicubic interpolation:
-        # assume label1 is the input QLabel and label2 is the output QLabel
-        pixmap1 = self.labelInputImage.pixmap()
-        img1 = pixmap1.toImage()
-        # upsample img1 using bicubic interpolation
-        img2 = QImage(img1.width() * 2, img1.height() * 2, QImage.Format_RGB888)
-        scaled_img = img1.scaled(img2.width(), img2.height(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        img2 = scaled_img.convertToFormat(QImage.Format_RGB888)
-        # create a QPixmap from img2 and set it to label2
-        pixmap2 = QPixmap.fromImage(img2)
-        self.labelBicubicImage.setPixmap(pixmap2)
-        self.scrollAreaBicubicImage.setWidget(self.labelBicubicImage)
+        self.do_bicubic()
 
         if model_name == "FSRCNN_x2":
             if self.fsrcnn_model == None:
