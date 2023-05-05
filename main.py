@@ -2,6 +2,7 @@ import os
 import sys
 from PyQt5 import QtWidgets, QtGui, uic
 from PyQt5.QtGui import QPixmap, QPalette, QImage
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QScrollArea, QFileDialog, QLabel, QMessageBox
 
 import cv2
@@ -15,6 +16,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         uic.loadUi('isr.ui', self)
         self.labelInputImage = QLabel()
+        self.labelBicubicImage = QLabel()
         self.labelOutputImage = QLabel()
 
         self.btnChooseImage.clicked.connect(self.choose_input_image)
@@ -35,7 +37,7 @@ class MainWindow(QMainWindow):
             pixmap = QPixmap(filename)
             self.labelInputImage.setPixmap(pixmap)
             self.scrollAreaInputImage.setWidget(self.labelInputImage)
-            self.labelOutputImage.clear()
+            # self.labelOutputImage.clear() #!!
 
             # tmp, for debug:
             # self.labelOutputImage.setPixmap(pixmap)
@@ -52,7 +54,21 @@ class MainWindow(QMainWindow):
         if self.input_image_filename == None:
             QMessageBox.about(self, "Ошибка", "Сначала выберите исходное изображение")
             return
-        if model_name == "FSRCNN":
+        
+        # do bicubic interpolation:
+        # assume label1 is the input QLabel and label2 is the output QLabel
+        pixmap1 = self.labelInputImage.pixmap()
+        img1 = pixmap1.toImage()
+        # upsample img1 using bicubic interpolation
+        img2 = QImage(img1.width() * 2, img1.height() * 2, QImage.Format_RGB888)
+        scaled_img = img1.scaled(img2.width(), img2.height(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        img2 = scaled_img.convertToFormat(QImage.Format_RGB888)
+        # create a QPixmap from img2 and set it to label2
+        pixmap2 = QPixmap.fromImage(img2)
+        self.labelBicubicImage.setPixmap(pixmap2)
+        self.scrollAreaBicubicImage.setWidget(self.labelBicubicImage)
+
+        if model_name == "FSRCNN_x2":
             if self.fsrcnn_model == None:
                 self.fsrcnn_model = FSRCNN(2)
                 self.fsrcnn_model.load_state_dict(torch.load('fsrcnn_x2-T91-f791f07f.pth.tar')['state_dict'])
@@ -73,8 +89,8 @@ class MainWindow(QMainWindow):
             # output_img = np.transpose(output_img, (1, 2, 0))
             # output_img = (output_img * 255.0).clip(0, 255).astype(np.uint8) # Clip and convert to uint8
             output_img = (output_img * 255.0).astype(np.uint8) # Clip and convert to uint8
-            print(output_img)
-            cv2.imwrite('fdfh.png', output_img)
+            # print(output_img)
+            # cv2.imwrite('fdfh.png', output_img)
 
             # convert numpy image to QImage
             height, width = output_img.shape
