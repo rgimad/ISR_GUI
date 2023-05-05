@@ -70,6 +70,8 @@ class MainWindow(QMainWindow):
             QMessageBox.about(self, "Ошибка", "Сначала выберите исходное изображение")
             return
         
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+
         self.do_bicubic()
 
         if model_name == "FSRCNN_x2":
@@ -102,12 +104,13 @@ class MainWindow(QMainWindow):
             qImg = QImage(output_img.data, width, height, bytesPerLine, QImage.Format_Grayscale8)
             pixmap = QPixmap(qImg)
             self.labelOutputImage.setPixmap(pixmap)
-            self.scrollAreaOutputImage.setWidget(self.labelOutputImage)
-
-                
-                
+            self.scrollAreaOutputImage.setWidget(self.labelOutputImage)                
         else:
             QMessageBox.about(self, "error", "not implemented yet")
+
+        QApplication.restoreOverrideCursor()
+
+
 
 
 
