@@ -10,6 +10,7 @@ import torch
 import numpy as np
 
 from fsrcnn_model_test1 import FSRCNN
+from vdsr_model import VDSR
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -24,7 +25,8 @@ class MainWindow(QMainWindow):
         self.btnDoSR.clicked.connect(self.do_super_resolution)
 
         self.input_image_filename = None
-        self.fsrcnn_model = None
+        self.fsrcnn_x2_model = None
+        self.vdsr_x2_model = None
 
         self.torch_device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         print(f"torch device is {self.torch_device}")
@@ -38,6 +40,7 @@ class MainWindow(QMainWindow):
             pixmap = QPixmap.fromImage(QPixmap.toImage(QPixmap(filename)).convertToFormat(QtGui.QImage.Format_Grayscale8))
             self.labelInputImage.setPixmap(pixmap)
             self.scrollAreaInputImage.setWidget(self.labelInputImage)
+            self.scrollAreaInputImage.setToolTip(self.input_image_filename)
             # self.labelOutputImage.clear() #!!
 
             # tmp, for debug:
@@ -64,6 +67,31 @@ class MainWindow(QMainWindow):
         self.labelBicubicImage.setPixmap(pixmap2)
         self.scrollAreaBicubicImage.setWidget(self.labelBicubicImage)
 
+    def model_do_inference(self, image, model):
+        
+        # image = np.transpose(image, (2, 0, 1)) # Transpose the image to (channels, height, width)
+        image = np.expand_dims(image, axis=0) # Add a batch dimension
+        image = np.expand_dims(image, axis=0) # Add a batch dimension #
+        input_tensor = torch.from_numpy(image).to(self.torch_device) # Convert to a PyTorch tensor and move to the device
+
+        with torch.no_grad():
+            output_tensor = model(input_tensor)
+
+        output_img = output_tensor.cpu().detach().numpy()[0][0] # why second [0]
+        # output_img = np.transpose(output_img, (1, 2, 0))
+        # output_img = (output_img * 255.0).clip(0, 255).astype(np.uint8) # Clip and convert to uint8
+        output_img = (output_img * 255.0).astype(np.uint8) # Clip and convert to uint8
+        # print(output_img)
+        # cv2.imwrite('fdfh.png', output_img)
+
+        # convert numpy image to QImage
+        height, width = output_img.shape
+        bytesPerLine = width
+        qImg = QImage(output_img.data, width, height, bytesPerLine, QImage.Format_Grayscale8)
+        pixmap = QPixmap(qImg)
+        self.labelOutputImage.setPixmap(pixmap)
+        self.scrollAreaOutputImage.setWidget(self.labelOutputImage) 
+
     def do_super_resolution(self):
         model_name = self.cbChooseModel.currentText()
         if self.input_image_filename == None:
@@ -75,36 +103,28 @@ class MainWindow(QMainWindow):
         self.do_bicubic()
 
         if model_name == "FSRCNN_x2":
-            if self.fsrcnn_model == None:
-                self.fsrcnn_model = FSRCNN(2)
-                self.fsrcnn_model.load_state_dict(torch.load('fsrcnn_x2-T91-f791f07f.pth.tar')['state_dict'])
-                self.fsrcnn_model.to(self.torch_device)
-                self.fsrcnn_model.eval()
-                print('model loaded and ready')
+            if self.fsrcnn_x2_model == None:
+                self.fsrcnn_x2_model = FSRCNN(2)
+                self.fsrcnn_x2_model.load_state_dict(torch.load('fsrcnn_x2-T91-f791f07f.pth.tar')['state_dict'])
+                self.fsrcnn_x2_model.to(self.torch_device)
+                self.fsrcnn_x2_model.eval()
+                print(f"model {model_name} loaded and ready")
 
             input_img = cv2.imread(self.input_image_filename, cv2.IMREAD_GRAYSCALE).astype(np.float32) / 255.
-            # input_img = np.transpose(input_img, (2, 0, 1)) # Transpose the image to (channels, height, width)
-            input_img = np.expand_dims(input_img, axis=0) # Add a batch dimension
-            input_img = np.expand_dims(input_img, axis=0) # Add a batch dimension #
-            input_tensor = torch.from_numpy(input_img).to(self.torch_device) # Convert to a PyTorch tensor and move to the device
+            self.model_do_inference(input_img, self.fsrcnn_x2_model)
 
-            with torch.no_grad():
-                output_tensor = self.fsrcnn_model(input_tensor)
+        elif model_name == "VDSR_x2":
+            if self.vdsr_x2_model == None:
+                self.vdsr_x2_model = VDSR()
+                self.vdsr_x2_model.load_state_dict(torch.load('vdsr_ir_x2.pth.tar')['state_dict'])
+                self.vdsr_x2_model.to(self.torch_device)
+                self.vdsr_x2_model.eval()
+                print(f"model {model_name} loaded and ready")
 
-            output_img = output_tensor.cpu().detach().numpy()[0][0] # why second [0]
-            # output_img = np.transpose(output_img, (1, 2, 0))
-            # output_img = (output_img * 255.0).clip(0, 255).astype(np.uint8) # Clip and convert to uint8
-            output_img = (output_img * 255.0).astype(np.uint8) # Clip and convert to uint8
-            # print(output_img)
-            # cv2.imwrite('fdfh.png', output_img)
+            input_img = cv2.imread(self.input_image_filename, cv2.IMREAD_GRAYSCALE).astype(np.float32) / 255.
+            bicubic_input_img = cv2.resize(input_img, (input_img.shape[1]*2, input_img.shape[0]*2), interpolation = cv2.INTER_CUBIC)
+            self.model_do_inference(bicubic_input_img, self.vdsr_x2_model)
 
-            # convert numpy image to QImage
-            height, width = output_img.shape
-            bytesPerLine = width
-            qImg = QImage(output_img.data, width, height, bytesPerLine, QImage.Format_Grayscale8)
-            pixmap = QPixmap(qImg)
-            self.labelOutputImage.setPixmap(pixmap)
-            self.scrollAreaOutputImage.setWidget(self.labelOutputImage)                
         else:
             QMessageBox.about(self, "error", "not implemented yet")
 

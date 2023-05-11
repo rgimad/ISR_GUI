@@ -79,6 +79,11 @@
     </item>
     <item>
      <property name="text">
+      <string>VDSR_x2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
       <string>SRGAN_x2</string>
      </property>
     </item>
