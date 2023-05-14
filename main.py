@@ -9,8 +9,8 @@ import cv2
 import torch
 import numpy as np
 
-from fsrcnn_model_test1 import FSRCNN
-from vdsr_model import VDSR
+from fsrcnn_ir_model import FSRCNN
+from vdsr_ir_model import VDSR
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -105,7 +105,7 @@ class MainWindow(QMainWindow):
         if model_name == "FSRCNN_x2":
             if self.fsrcnn_x2_model == None:
                 self.fsrcnn_x2_model = FSRCNN(2)
-                self.fsrcnn_x2_model.load_state_dict(torch.load('fsrcnn_x2-T91-f791f07f.pth.tar')['state_dict'])
+                self.fsrcnn_x2_model.load_state_dict(torch.load('fsrcnn_ir_x2.pth.tar')['state_dict'])
                 self.fsrcnn_x2_model.to(self.torch_device)
                 self.fsrcnn_x2_model.eval()
                 print(f"model {model_name} loaded and ready")
