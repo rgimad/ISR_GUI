@@ -1,9 +1,9 @@
 import os
 import sys
 from PyQt5 import QtWidgets, QtGui, uic
-from PyQt5.QtGui import QPixmap, QPalette, QImage
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QMainWindow, QScrollArea, QFileDialog, QLabel, QMessageBox
+from PyQt5.QtGui import QPixmap, QPalette, QImage, QCursor
+from PyQt5.QtCore import Qt, QMimeData
+from PyQt5.QtWidgets import QApplication, QMainWindow, QScrollArea, QFileDialog, QLabel, QMessageBox, QAction, QMenu, QSizePolicy
 
 import cv2
 import torch
@@ -12,13 +12,35 @@ import numpy as np
 from fsrcnn_ir_model import FSRCNN
 from vdsr_ir_model import VDSR
 
+class ImageLabel(QLabel):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect(self.showContextMenu)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.setAlignment(Qt.AlignCenter)
+
+    def showContextMenu(self, pos):
+        menu = QMenu()
+        copyAction = QAction("Копировать", self)
+        copyAction.triggered.connect(self.copyImage)
+        menu.addAction(copyAction)
+        menu.exec_(QCursor.pos())
+
+    def copyImage(self):
+        if self.pixmap():
+            mimeData = QMimeData()
+            mimeData.setImageData(self.pixmap().toImage())
+            QApplication.clipboard().setMimeData(mimeData)
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         uic.loadUi('isr.ui', self)
-        self.labelInputImage = QLabel()
-        self.labelBicubicImage = QLabel()
-        self.labelOutputImage = QLabel()
+        self.labelInputImage = ImageLabel()
+        self.labelBicubicImage = ImageLabel()
+        self.labelOutputImage = ImageLabel()
 
         self.btnChooseImage.clicked.connect(self.choose_input_image)
         self.btnSaveResult.clicked.connect(self.save_output_image)
