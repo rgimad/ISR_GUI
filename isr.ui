@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>868</width>
-    <height>812</height>
+    <width>1196</width>
+    <height>920</height>
    </rect>
   </property>
   <property name="font">
@@ -96,8 +96,8 @@
    <widget class="QPushButton" name="btnSaveResult">
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>700</y>
+      <x>1030</x>
+      <y>420</y>
       <width>111</width>
       <height>51</height>
      </rect>
@@ -131,8 +131,8 @@
      <rect>
       <x>160</x>
       <y>70</y>
-      <width>391</width>
-      <height>281</height>
+      <width>541</width>
+      <height>361</height>
      </rect>
     </property>
     <property name="widgetResizable">
@@ -143,8 +143,8 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>389</width>
-       <height>279</height>
+       <width>539</width>
+       <height>359</height>
       </rect>
      </property>
     </widget>
@@ -152,10 +152,10 @@
    <widget class="QScrollArea" name="scrollAreaOutputImage">
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>400</y>
-      <width>391</width>
-      <height>281</height>
+      <x>600</x>
+      <y>485</y>
+      <width>541</width>
+      <height>361</height>
      </rect>
     </property>
     <property name="widgetResizable">
@@ -166,8 +166,8 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>389</width>
-       <height>279</height>
+       <width>539</width>
+       <height>359</height>
       </rect>
      </property>
     </widget>
@@ -175,8 +175,8 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>365</y>
+      <x>40</x>
+      <y>450</y>
       <width>191</width>
       <height>21</height>
      </rect>
@@ -188,10 +188,10 @@
    <widget class="QScrollArea" name="scrollAreaBicubicImage">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>400</y>
-      <width>391</width>
-      <height>281</height>
+      <x>40</x>
+      <y>485</y>
+      <width>541</width>
+      <height>361</height>
      </rect>
     </property>
     <property name="widgetResizable">
@@ -202,8 +202,8 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>389</width>
-       <height>279</height>
+       <width>539</width>
+       <height>359</height>
       </rect>
      </property>
     </widget>
@@ -211,8 +211,8 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>365</y>
+      <x>600</x>
+      <y>450</y>
       <width>221</width>
       <height>21</height>
      </rect>
@@ -233,7 +233,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>868</width>
+     <width>1196</width>
      <height>21</height>
     </rect>
    </property>
