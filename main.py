@@ -11,6 +11,7 @@ import numpy as np
 
 from fsrcnn_ir_model import FSRCNN
 from vdsr_ir_model import VDSR
+from edsr_ir_model import EDSR
 
 class ImageLabel(QLabel):
     def __init__(self, parent=None):
@@ -49,6 +50,7 @@ class MainWindow(QMainWindow):
         self.input_image_filename = None
         self.fsrcnn_x2_model = None
         self.vdsr_x2_model = None
+        self.edsr_x2_model = None
 
         self.torch_device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         print(f"torch device is {self.torch_device}")
@@ -146,6 +148,17 @@ class MainWindow(QMainWindow):
             input_img = cv2.imread(self.input_image_filename, cv2.IMREAD_GRAYSCALE).astype(np.float32) / 255.
             bicubic_input_img = cv2.resize(input_img, (input_img.shape[1]*2, input_img.shape[0]*2), interpolation = cv2.INTER_CUBIC)
             self.model_do_inference(bicubic_input_img, self.vdsr_x2_model)
+
+        elif model_name == "EDSR_x2":
+            if self.edsr_x2_model == None:
+                self.edsr_x2_model = EDSR(2)
+                self.edsr_x2_model.load_state_dict(torch.load('edsr_ir_x2.pth.tar')['state_dict'])
+                self.edsr_x2_model.to(self.torch_device)
+                self.edsr_x2_model.eval()
+                print(f"model {model_name} loaded and ready")
+
+            input_img = cv2.imread(self.input_image_filename, cv2.IMREAD_GRAYSCALE).astype(np.float32) / 255.
+            self.model_do_inference(input_img, self.edsr_x2_model)
 
         else:
             QMessageBox.about(self, "error", "not implemented yet")

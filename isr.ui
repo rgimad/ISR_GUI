@@ -84,6 +84,11 @@
     </item>
     <item>
      <property name="text">
+      <string>EDSR_x2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
       <string>SRGAN_x2</string>
      </property>
     </item>
