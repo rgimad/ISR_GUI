@@ -129,7 +129,7 @@ class MainWindow(QMainWindow):
         if model_name == "FSRCNN_x2":
             if self.fsrcnn_x2_model == None:
                 self.fsrcnn_x2_model = FSRCNN(2)
-                self.fsrcnn_x2_model.load_state_dict(torch.load('fsrcnn_ir_x2.pth.tar')['state_dict'])
+                self.fsrcnn_x2_model.load_state_dict(torch.load('fsrcnn_ir_x2.pth.tar', map_location=('cpu' if self.torch_device.type != 'cuda' else None))['state_dict'])
                 self.fsrcnn_x2_model.to(self.torch_device)
                 self.fsrcnn_x2_model.eval()
                 print(f"model {model_name} loaded and ready")
@@ -140,7 +140,7 @@ class MainWindow(QMainWindow):
         elif model_name == "VDSR_x2":
             if self.vdsr_x2_model == None:
                 self.vdsr_x2_model = VDSR()
-                self.vdsr_x2_model.load_state_dict(torch.load('vdsr_ir_x2.pth.tar')['state_dict'])
+                self.vdsr_x2_model.load_state_dict(torch.load('vdsr_ir_x2.pth.tar', map_location=('cpu' if self.torch_device.type != 'cuda' else None))['state_dict'])
                 self.vdsr_x2_model.to(self.torch_device)
                 self.vdsr_x2_model.eval()
                 print(f"model {model_name} loaded and ready")
@@ -152,7 +152,7 @@ class MainWindow(QMainWindow):
         elif model_name == "EDSR_x2":
             if self.edsr_x2_model == None:
                 self.edsr_x2_model = EDSR(2)
-                self.edsr_x2_model.load_state_dict(torch.load('edsr_ir_x2.pth.tar')['state_dict'])
+                self.edsr_x2_model.load_state_dict(torch.load('edsr_ir_x2.pth.tar', map_location=('cpu' if self.torch_device.type != 'cuda' else None))['state_dict'])
                 self.edsr_x2_model.to(self.torch_device)
                 self.edsr_x2_model.eval()
                 print(f"model {model_name} loaded and ready")
