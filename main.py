@@ -1,38 +1,20 @@
 import os
 import sys
+
+import cv2
+import torch
+import numpy as np
+import math
+
 from PyQt5 import QtWidgets, QtGui, uic
 from PyQt5.QtGui import QPixmap, QPalette, QImage, QCursor
 from PyQt5.QtCore import Qt, QMimeData
 from PyQt5.QtWidgets import QApplication, QMainWindow, QScrollArea, QFileDialog, QLabel, QMessageBox, QAction, QMenu, QSizePolicy
 
-import cv2
-import torch
-import numpy as np
-
+from image_label import ImageLabel
 from fsrcnn_ir_model import FSRCNN
 from vdsr_ir_model import VDSR
 from edsr_ir_model import EDSR
-
-class ImageLabel(QLabel):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.customContextMenuRequested.connect(self.showContextMenu)
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.setAlignment(Qt.AlignCenter)
-
-    def showContextMenu(self, pos):
-        menu = QMenu()
-        copyAction = QAction("Копировать", self)
-        copyAction.triggered.connect(self.copyImage)
-        menu.addAction(copyAction)
-        menu.exec_(QCursor.pos())
-
-    def copyImage(self):
-        if self.pixmap():
-            mimeData = QMimeData()
-            mimeData.setImageData(self.pixmap().toImage())
-            QApplication.clipboard().setMimeData(mimeData)
 
 
 class MainWindow(QMainWindow):
@@ -43,9 +25,9 @@ class MainWindow(QMainWindow):
         self.labelBicubicImage = ImageLabel()
         self.labelOutputImage = ImageLabel()
 
-        self.btnChooseImage.clicked.connect(self.choose_input_image)
-        self.btnSaveResult.clicked.connect(self.save_output_image)
-        self.btnDoSR.clicked.connect(self.do_super_resolution)
+        self.btnResearchChooseImage.clicked.connect(self.reserach_process_input_image)
+        # self.btnSaveResult.clicked.connect(self.save_output_image)
+        # self.btnDoSR.clicked.connect(self.do_super_resolution)
 
         self.input_image_filename = None
         self.fsrcnn_x2_model = None
@@ -55,21 +37,35 @@ class MainWindow(QMainWindow):
         self.torch_device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         print(f"torch device is {self.torch_device}")
 
-    def choose_input_image(self):
-        filename, _ = QFileDialog.getOpenFileName(self, "Open Image", "", "Image Files (*.png *.jpg *.bmp)")
-        if filename:
-            # print(filename)
-            self.input_image_filename = filename
-            # pixmap = QPixmap(filename)
-            pixmap = QPixmap.fromImage(QPixmap.toImage(QPixmap(filename)).convertToFormat(QtGui.QImage.Format_Grayscale8))
-            self.labelInputImage.setPixmap(pixmap)
-            self.scrollAreaInputImage.setWidget(self.labelInputImage)
-            self.scrollAreaInputImage.setToolTip(self.input_image_filename)
-            # self.labelOutputImage.clear() #!!
+    def reserach_process_input_image(self):
+        # print(self.get_current_model_name())
 
-            # tmp, for debug:
-            # self.labelOutputImage.setPixmap(pixmap)
-            # self.scrollAreaOutputImage.setWidget(self.labelOutputImage)
+        self.input_image_filename, _ = QFileDialog.getOpenFileName(self, "Выбрать изображение", "", "Изображения (*.png *.jpg *.bmp)")
+        # QMessageBox.about(self, "", f"'{self.input_image_filename}'")
+        if self.input_image_filename == "":
+            return
+        
+        pixmap = QPixmap.fromImage(QPixmap.toImage(QPixmap(self.input_image_filename)).convertToFormat(QtGui.QImage.Format_Grayscale8))
+        self.labelInputImage.setPixmap(pixmap.scaled(self.saResearchInputImage.width() - 5, self.saResearchInputImage.height() - 5, Qt.AspectRatioMode.KeepAspectRatio))
+        self.saResearchInputImage.setWidget(self.labelInputImage)
+
+        # if filename:
+        #     # print(filename)
+        #     self.input_image_filename = filename
+        #     # pixmap = QPixmap(filename)
+        #     pixmap = QPixmap.fromImage(QPixmap.toImage(QPixmap(filename)).convertToFormat(QtGui.QImage.Format_Grayscale8))
+        #     self.labelInputImage.setPixmap(pixmap)
+        #     self.scrollAreaInputImage.setWidget(self.labelInputImage)
+        #     self.scrollAreaInputImage.setToolTip(self.input_image_filename)
+        #     # self.labelOutputImage.clear() #!!
+
+        #     # tmp, for debug:
+        #     # self.labelOutputImage.setPixmap(pixmap)
+        #     # self.scrollAreaOutputImage.setWidget(self.labelOutputImage)
+
+
+    def get_current_model_name(self):
+        return self.cbResearchChooseModel.currentText().lower() + "_ir_" + ("x2" if self.rbResearch_x2.isChecked() else "x4") + ".pth.tar"
 
     def save_output_image(self):
         filename, _ = QFileDialog.getSaveFileName(self, "Save Image", os.path.basename(os.path.splitext(self.input_image_filename)[0]) + "_SR_" + self.cbChooseModel.currentText(), "Image Files (*.png *.jpg *.bmp)")
@@ -92,7 +88,7 @@ class MainWindow(QMainWindow):
         self.scrollAreaBicubicImage.setWidget(self.labelBicubicImage)
 
     def model_do_inference(self, image, model):
-        
+        orig_image = image
         # image = np.transpose(image, (2, 0, 1)) # Transpose the image to (channels, height, width)
         image = np.expand_dims(image, axis=0) # Add a batch dimension
         image = np.expand_dims(image, axis=0) # Add a batch dimension #
@@ -104,6 +100,10 @@ class MainWindow(QMainWindow):
         output_img = output_tensor.cpu().detach().numpy()[0][0] # why second [0]
         # output_img = np.transpose(output_img, (1, 2, 0))
         # output_img = (output_img * 255.0).clip(0, 255).astype(np.uint8) # Clip and convert to uint8
+
+        psnr = 10. * math.log10(1. / np.square(np.subtract(orig_image, output_img)).mean())
+        print(f"psnr = {psnr}")
+
         output_img = (output_img * 255.0).astype(np.uint8) # Clip and convert to uint8
         # print(output_img)
         # cv2.imwrite('fdfh.png', output_img)
