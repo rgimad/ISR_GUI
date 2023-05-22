@@ -21,6 +21,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         uic.loadUi('isr.ui', self)
+
         self.labelInputImage = ImageLabel()
         self.labelBicubicImage = ImageLabel()
         self.labelOutputImage = ImageLabel()
@@ -53,10 +54,9 @@ class MainWindow(QMainWindow):
         img = QPixmap.toImage(self.labelInputImage.pixmap())
         painter = QPainter(img)
         pen = QPen()
-        pen.setWidth(4)
+        pen.setWidth(3)
         pen.setColor(Qt.red)
         painter.setPen(pen)
-        # painter.drawPoint(55,55)
         roi_screen_width = self.saResearchGTImage.width() * self.scaledInputImagePixmap.width() // pixmap.width()
         roi_screen_height = self.saResearchGTImage.height() * self.scaledInputImagePixmap.height() // pixmap.height()
         painter.drawRect(55, 55, roi_screen_width, roi_screen_height)

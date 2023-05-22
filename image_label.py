@@ -7,6 +7,9 @@ from PyQt5.QtWidgets import QApplication, QLabel, QAction, QMenu, QSizePolicy
 class ImageLabel(QLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
+
+        self.setMouseTracking(True)
+
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.showContextMenu)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -32,5 +35,14 @@ class ImageLabel(QLabel):
         qImg = QImage(output_img.data, width, height, bytesPerLine, QImage.Format_Grayscale8)
         pixmap = QPixmap(qImg)
         self.setPixmap(pixmap)
+
+    # def paintEvent(self, e):
+    #     super().paintEvent(e)
+    #     print("paintEvent")
+
+    def mouseMoveEvent(self, event):
+        print(f"{event.x()}, {event.y()}")
+
+
 
         
