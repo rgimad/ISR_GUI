@@ -2,15 +2,15 @@ import os
 import sys
 
 import cv2
-import torch
 import numpy as np
 import math
 
 from PyQt5 import QtWidgets, QtGui, uic
-from PyQt5.QtGui import QPixmap, QPalette, QImage, QCursor
+from PyQt5.QtGui import QPixmap, QPalette, QImage, QCursor, QPainter, QPen
 from PyQt5.QtCore import Qt, QMimeData
 from PyQt5.QtWidgets import QApplication, QMainWindow, QScrollArea, QFileDialog, QLabel, QMessageBox, QAction, QMenu, QSizePolicy
 
+import torch
 from image_label import ImageLabel
 from fsrcnn_ir_model import FSRCNN
 from vdsr_ir_model import VDSR
@@ -46,8 +46,22 @@ class MainWindow(QMainWindow):
             return
         
         pixmap = QPixmap.fromImage(QPixmap.toImage(QPixmap(self.input_image_filename)).convertToFormat(QtGui.QImage.Format_Grayscale8))
-        self.labelInputImage.setPixmap(pixmap.scaled(self.saResearchInputImage.width() - 5, self.saResearchInputImage.height() - 5, Qt.AspectRatioMode.KeepAspectRatio))
+        self.scaledInputImagePixmap = pixmap.scaled(self.saResearchInputImage.width() - 5, self.saResearchInputImage.height() - 5, Qt.AspectRatioMode.KeepAspectRatio)
+        self.labelInputImage.setPixmap(self.scaledInputImagePixmap)
         self.saResearchInputImage.setWidget(self.labelInputImage)
+
+        img = QPixmap.toImage(self.labelInputImage.pixmap())
+        painter = QPainter(img)
+        pen = QPen()
+        pen.setWidth(4)
+        pen.setColor(Qt.red)
+        painter.setPen(pen)
+        # painter.drawPoint(55,55)
+        roi_screen_width = self.saResearchGTImage.width() * self.scaledInputImagePixmap.width() // pixmap.width()
+        roi_screen_height = self.saResearchGTImage.height() * self.scaledInputImagePixmap.height() // pixmap.height()
+        painter.drawRect(55, 55, roi_screen_width, roi_screen_height)
+        painter.end()
+        self.labelInputImage.setPixmap(QPixmap.fromImage(img))
 
         # if filename:
         #     # print(filename)

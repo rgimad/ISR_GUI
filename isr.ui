@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1137</width>
-    <height>920</height>
+    <width>1592</width>
+    <height>917</height>
    </rect>
   </property>
   <property name="font">
@@ -29,212 +29,324 @@
        <attribute name="title">
         <string>Research</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="2" colspan="2">
-         <widget class="QGroupBox" name="gbToolbarResearch">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="title">
-           <string/>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_2">
-           <property name="sizeConstraint">
-            <enum>QLayout::SetDefaultConstraint</enum>
-           </property>
-           <item row="0" column="5">
-            <widget class="QRadioButton" name="rbResearch_x2">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>x2</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="6">
-            <widget class="QRadioButton" name="rbResearch_x4">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>x4</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0" colspan="5">
-            <widget class="QComboBox" name="cbResearchChooseModel">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string/>
-             </property>
-             <property name="sizeAdjustPolicy">
-              <enum>QComboBox::AdjustToContents</enum>
-             </property>
-             <item>
-              <property name="text">
-               <string>FSRCNN</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>VDSR</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>EDSR</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="0" column="7">
-            <widget class="QPushButton" name="btnResearchChooseImage">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Выбрать
-изображение</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="3" column="2">
-         <widget class="QLabel" name="lbResearchSR">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
+       <widget class="QGroupBox" name="gbToolbarResearch">
+        <property name="geometry">
+         <rect>
+          <x>200</x>
+          <y>190</y>
+          <width>1271</width>
+          <height>501</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="title">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <widget class="QRadioButton" name="rbResearch_x2">
+         <property name="geometry">
+          <rect>
+           <x>101</x>
+           <y>21</y>
+           <width>40</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>x2</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+        <widget class="QRadioButton" name="rbResearch_x4">
+         <property name="geometry">
+          <rect>
+           <x>147</x>
+           <y>21</y>
+           <width>40</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>x4</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="cbResearchChooseModel">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>20</y>
+           <width>85</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string/>
+         </property>
+         <property name="sizeAdjustPolicy">
+          <enum>QComboBox::AdjustToContents</enum>
+         </property>
+         <item>
           <property name="text">
-           <string>Super Resolution:</string>
+           <string>FSRCNN</string>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="2">
-         <widget class="QScrollArea" name="saResearchSRImage">
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents_3">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>359</width>
-             <height>352</height>
-            </rect>
-           </property>
-          </widget>
-         </widget>
-        </item>
-        <item row="4" column="3">
-         <widget class="QScrollArea" name="saResearchGTImage">
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents_4">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>359</width>
-             <height>352</height>
-            </rect>
-           </property>
-          </widget>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QScrollArea" name="saResearchBicubicImage">
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>359</width>
-             <height>352</height>
-            </rect>
-           </property>
-          </widget>
-         </widget>
-        </item>
-        <item row="3" column="3">
-         <widget class="QLabel" name="lbResearchGT">
+         </item>
+         <item>
           <property name="text">
-           <string>Ground truth:</string>
+           <string>VDSR</string>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="lbResearchBicubic">
+         </item>
+         <item>
           <property name="text">
-           <string>Интерполяция (bicubic):</string>
+           <string>EDSR</string>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+         </item>
+        </widget>
+        <widget class="QPushButton" name="btnResearchChooseImage">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>430</y>
+           <width>181</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Выбрать изображение</string>
+         </property>
+        </widget>
+        <widget class="QScrollArea" name="saResearchInputImage">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>60</y>
+           <width>360</width>
+           <height>360</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>360</width>
+           <height>360</height>
+          </size>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>358</width>
+            <height>358</height>
+           </rect>
           </property>
          </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QScrollArea" name="saResearchInputImage">
-          <property name="widgetResizable">
-           <bool>true</bool>
+        </widget>
+        <widget class="QLabel" name="lbResearchBicubic">
+         <property name="geometry">
+          <rect>
+           <x>390</x>
+           <y>140</y>
+           <width>178</width>
+           <height>19</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Интерполяция (bicubic):</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+         </property>
+        </widget>
+        <widget class="QScrollArea" name="saResearchBicubicImage">
+         <property name="geometry">
+          <rect>
+           <x>390</x>
+           <y>170</y>
+           <width>250</width>
+           <height>250</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>250</width>
+           <height>250</height>
+          </size>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>248</width>
+            <height>248</height>
+           </rect>
           </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents_2">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>359</width>
-             <height>352</height>
-            </rect>
-           </property>
-          </widget>
          </widget>
-        </item>
-       </layout>
+        </widget>
+        <widget class="QLabel" name="lbResearchSR">
+         <property name="geometry">
+          <rect>
+           <x>650</x>
+           <y>140</y>
+           <width>145</width>
+           <height>19</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Super Resolution:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+         </property>
+        </widget>
+        <widget class="QScrollArea" name="saResearchSRImage">
+         <property name="geometry">
+          <rect>
+           <x>650</x>
+           <y>170</y>
+           <width>250</width>
+           <height>250</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>250</width>
+           <height>250</height>
+          </size>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_3">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>248</width>
+            <height>248</height>
+           </rect>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QScrollArea" name="saResearchGTImage">
+         <property name="geometry">
+          <rect>
+           <x>910</x>
+           <y>170</y>
+           <width>250</width>
+           <height>250</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>250</width>
+           <height>250</height>
+          </size>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_4">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>248</width>
+            <height>248</height>
+           </rect>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QLabel" name="lbResearchGT">
+         <property name="geometry">
+          <rect>
+           <x>910</x>
+           <y>140</y>
+           <width>98</width>
+           <height>19</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Ground truth:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+         </property>
+        </widget>
+       </widget>
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
@@ -251,8 +363,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>542</width>
-             <height>737</height>
+             <width>770</width>
+             <height>734</height>
             </rect>
            </property>
           </widget>
@@ -389,8 +501,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>543</width>
-             <height>737</height>
+             <width>770</width>
+             <height>734</height>
             </rect>
            </property>
           </widget>
@@ -407,7 +519,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1137</width>
+     <width>1592</width>
      <height>21</height>
     </rect>
    </property>
