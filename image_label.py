@@ -43,6 +43,9 @@ class RoiImageLabel(ImageLabel):
         self.setMouseTracking(True)
         self.roi_choose_mode = False
 
+    def setROICallback(self, roi_callback):
+        self.roi_callback = roi_callback
+
     # def paintEvent(self, e):
     #     super().paintEvent(e)
     #     print("paintEvent")
@@ -91,6 +94,11 @@ class RoiImageLabel(ImageLabel):
         painter.drawRect(in_image_x, in_image_y, self.roi_scaled_size, self.roi_scaled_size)
         painter.end()
         self.setPixmap(QPixmap.fromImage(img))
+
+    def mouseReleaseEvent(self, event):
+        if not self.roi_choose_mode:
+            return
+        self.roi_callback(event.x())
 
 
 
