@@ -35,13 +35,15 @@ class ImageLabel(QLabel):
         pixmap = QPixmap(qImg)
         self.setPixmap(pixmap)
 
-
+################
 
 class RoiImageLabel(ImageLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setMouseTracking(True)
         self.roi_choose_mode = False
+        self.in_image_x = 0
+        self.in_image_y = 0
 
     def setROICallback(self, roi_callback):
         self.roi_callback = roi_callback
@@ -72,15 +74,12 @@ class RoiImageLabel(ImageLabel):
         if not self.roi_choose_mode:
             return
 
-        in_image_x = event.x() - self.scaled_pixmap_x - self.roi_scaled_size // 2
-        in_image_y = event.y() - self.scaled_pixmap_y - self.roi_scaled_size // 2
-        # if in_image_x < 0 or in_image_y < 0 or in_image_x + self.roi_scaled_size > self.scaled_pixmap.width() or in_image_y + self.roi_scaled_size > self.scaled_pixmap.height():
-        #     return
-
-        in_image_x = max(in_image_x, 0)
-        in_image_y = max(in_image_y, 0)
-        in_image_x = min(in_image_x, self.scaled_pixmap.width() - self.roi_scaled_size)
-        in_image_y = min(in_image_y, self.scaled_pixmap.height() - self.roi_scaled_size)
+        self.in_image_x = event.x() - self.scaled_pixmap_x - self.roi_scaled_size // 2
+        self.in_image_y = event.y() - self.scaled_pixmap_y - self.roi_scaled_size // 2
+        self.in_image_x = max(self.in_image_x, 0)
+        self.in_image_y = max(self.in_image_y, 0)
+        self.in_image_x = min(self.in_image_x, self.scaled_pixmap.width() - self.roi_scaled_size)
+        self.in_image_y = min(self.in_image_y, self.scaled_pixmap.height() - self.roi_scaled_size)
 
         img = QPixmap.toImage(self.scaled_pixmap)
         painter = QPainter(img)
@@ -91,23 +90,21 @@ class RoiImageLabel(ImageLabel):
         # roi_screen_width = self.saResearchGTImage.width() * self.research_input_scaled_pixmap.width() // self.research_input_orig_pixmap.width()
         # roi_screen_height = self.saResearchGTImage.height() * self.research_input_scaled_pixmap.height() // self.research_input_orig_pixmap.height()
         # painter.drawRect(55, 55, roi_screen_width, roi_screen_height)
-        painter.drawRect(in_image_x, in_image_y, self.roi_scaled_size, self.roi_scaled_size)
+        painter.drawRect(self.in_image_x, self.in_image_y, self.roi_scaled_size, self.roi_scaled_size)
         painter.end()
         self.setPixmap(QPixmap.fromImage(img))
 
     def mouseReleaseEvent(self, event):
         if not self.roi_choose_mode:
             return
-        in_image_x = event.x() - self.scaled_pixmap_x - self.roi_scaled_size // 2
-        in_image_y = event.y() - self.scaled_pixmap_y - self.roi_scaled_size // 2
-        real_x = in_image_x * self.orig_pixmap.width() // self.scaled_pixmap.width()
-        real_y = in_image_y * self.orig_pixmap.height() // self.scaled_pixmap.height()
+        real_x = self.in_image_x * self.orig_pixmap.width() // self.scaled_pixmap.width()
+        real_y = self.in_image_y * self.orig_pixmap.height() // self.scaled_pixmap.height()
         r = QRect(real_x, real_y, self.roi_real_size, self.roi_real_size)
         img1 = self.orig_pixmap.toImage()
-        px2 = QPixmap.fromImage(img1.copy(r))
-        self.setPixmap(px2)
+        orig_roi_pixmap = QPixmap.fromImage(img1.copy(r))
+        # self.setPixmap(orig_roi_pixmap)
         self.disableROIChoose()
-        # self.roi_callback(event.x())
+        self.roi_callback(orig_roi_pixmap)
 
 
 

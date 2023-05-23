@@ -16,16 +16,21 @@ from fsrcnn_ir_model import FSRCNN
 from vdsr_ir_model import VDSR
 from edsr_ir_model import EDSR
 
+main_window = None
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         uic.loadUi('isr.ui', self)
 
+        global main_window
+        main_window = self
+
         self.labelResearchInputImage = RoiImageLabel()
-        self.labelResearchInputImage.setROICallback(self.callback1)
-        self.labelBicubicImage = ImageLabel()
-        self.labelOutputImage = ImageLabel()
+        self.labelResearchInputImage.setROICallback(self.roi_chosen_callback)
+        self.labelResearchBicubicImage = ImageLabel()
+        self.labelResearchSRImage = ImageLabel()
+        self.labelResearchGTImage = ImageLabel()
 
         self.btnResearchChooseImage.clicked.connect(self.research_process_input_image)
         # self.btnSaveResult.clicked.connect(self.save_output_image)
@@ -51,12 +56,15 @@ class MainWindow(QMainWindow):
         if self.input_image_filename == "":
             return
 
-        self.labelResearchInputImage.loadImage(self.input_image_filename, self.saResearchInputImage.width() - 5, self.saResearchInputImage.height() - 5, self.saResearchGTImage.width())
+        self.labelResearchInputImage.loadImage(self.input_image_filename, self.saResearchInputImage.width() - 5, self.saResearchInputImage.height() - 5, self.saResearchGTImage.width() - 5)
         self.saResearchInputImage.setWidget(self.labelResearchInputImage)
 
 
-    def callback1(obj, x):
-        print(f"callback1({x})")
+    def roi_chosen_callback(obj, roi_pixmap):
+        # print(f"callback1({x})")
+        global main_window
+        main_window.labelResearchGTImage.setPixmap(roi_pixmap)
+        main_window.saResearchGTImage.setWidget(main_window.labelResearchGTImage)
 
     def get_current_model_name(self):
         return self.cbResearchChooseModel.currentText().lower() + "_ir_" + ("x2" if self.rbResearch_x2.isChecked() else "x4") + ".pth.tar"
