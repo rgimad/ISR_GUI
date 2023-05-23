@@ -5,6 +5,8 @@ import cv2
 import numpy as np
 import math
 
+from skimage.metrics import peak_signal_noise_ratio as psnr, structural_similarity as ssim, mean_squared_error
+
 from PyQt5 import QtWidgets, QtGui, uic
 from PyQt5.QtGui import QPixmap, QPalette, QImage, QCursor, QPainter, QPen
 from PyQt5.QtCore import Qt, QMimeData
@@ -74,6 +76,14 @@ class MainWindow(QMainWindow):
 
         main_window.labelResearchBicubicImage.setPixmap(QPixmap(QImage(roi_restored_bicubic.data, roi.shape[1], roi.shape[0], roi.shape[1], QImage.Format_Grayscale8)))
         main_window.saResearchBicubicImage.setWidget(main_window.labelResearchBicubicImage)
+
+        psnr_bicubic = psnr(roi, roi_restored_bicubic)
+        ssim_bicubic = ssim(roi, roi_restored_bicubic)
+        print(f"psnr_bicub = {psnr_bicubic}, ssim_bicub = {ssim_bicubic}")
+
+        # err = mean_squared_error(roi, roi_restored_bicubic)
+        # psnr2 = 10 * np.log10((255 ** 2) / err)
+        # print(psnr2)
         
 
     def research_get_current_model_name(self):
