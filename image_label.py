@@ -36,14 +36,22 @@ class ImageLabel(QLabel):
         self.setPixmap(pixmap)
 
 
+
 class RoiImageLabel(ImageLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setMouseTracking(True)
+        self.roi_choose_mode = False
 
     # def paintEvent(self, e):
     #     super().paintEvent(e)
     #     print("paintEvent")
+
+    def enableROIChoose(self):
+        self.roi_choose_mode = True
+
+    def disableROIChoose(self):
+        self.roi_choose_mode = False
 
     def loadImage(self, image_path, scaled_maxwidth, scaled_maxheight, roi_real_size):
         self.orig_pixmap = QPixmap.fromImage(QPixmap.toImage(QPixmap(image_path)).convertToFormat(QtGui.QImage.Format_Grayscale8))
@@ -57,6 +65,9 @@ class RoiImageLabel(ImageLabel):
 
     def mouseMoveEvent(self, event):
         # print(f"{event.x()}, {event.y()}")
+
+        if not self.roi_choose_mode:
+            return
 
         in_image_x = event.x() - self.scaled_pixmap_x - self.roi_scaled_size // 2
         in_image_y = event.y() - self.scaled_pixmap_y - self.roi_scaled_size // 2

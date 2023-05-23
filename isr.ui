@@ -346,6 +346,19 @@
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
          </property>
         </widget>
+        <widget class="QPushButton" name="btnResearchChooseROI">
+         <property name="geometry">
+          <rect>
+           <x>210</x>
+           <y>20</y>
+           <width>161</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Выбрать фрагмент</string>
+         </property>
+        </widget>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_2">
@@ -363,8 +376,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>770</width>
-             <height>734</height>
+             <width>36</width>
+             <height>16</height>
             </rect>
            </property>
           </widget>
@@ -501,8 +514,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>770</width>
-             <height>734</height>
+             <width>36</width>
+             <height>16</height>
             </rect>
            </property>
           </widget>

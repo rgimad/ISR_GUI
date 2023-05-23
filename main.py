@@ -22,13 +22,15 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         uic.loadUi('isr.ui', self)
 
-        self.labelInputImage = RoiImageLabel()
+        self.labelResearchInputImage = RoiImageLabel()
         self.labelBicubicImage = ImageLabel()
         self.labelOutputImage = ImageLabel()
 
-        self.btnResearchChooseImage.clicked.connect(self.reserach_process_input_image)
+        self.btnResearchChooseImage.clicked.connect(self.research_process_input_image)
         # self.btnSaveResult.clicked.connect(self.save_output_image)
         # self.btnDoSR.clicked.connect(self.do_super_resolution)
+
+        self.btnResearchChooseROI.clicked.connect(self.research_choose_roi)
 
         self.input_image_filename = None
         self.fsrcnn_x2_model = None
@@ -38,7 +40,10 @@ class MainWindow(QMainWindow):
         self.torch_device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         print(f"torch device is {self.torch_device}")
 
-    def reserach_process_input_image(self):
+    def research_choose_roi(self):
+        self.labelResearchInputImage.enableROIChoose()
+
+    def research_process_input_image(self):
         # print(self.get_current_model_name())
 
         self.input_image_filename, _ = QFileDialog.getOpenFileName(self, "Выбрать изображение", "", "Изображения (*.png *.jpg *.bmp)")
@@ -50,8 +55,8 @@ class MainWindow(QMainWindow):
         # self.research_input_scaled_pixmap = self.research_input_orig_pixmap.scaled(self.saResearchInputImage.width() - 5, self.saResearchInputImage.height() - 5, Qt.AspectRatioMode.KeepAspectRatio)
         # self.labelInputImage.setPixmap(self.research_input_scaled_pixmap)
 
-        self.labelInputImage.loadImage(self.input_image_filename, self.saResearchInputImage.width() - 5, self.saResearchInputImage.height() - 5, self.saResearchGTImage.width())
-        self.saResearchInputImage.setWidget(self.labelInputImage)
+        self.labelResearchInputImage.loadImage(self.input_image_filename, self.saResearchInputImage.width() - 5, self.saResearchInputImage.height() - 5, self.saResearchGTImage.width())
+        self.saResearchInputImage.setWidget(self.labelResearchInputImage)
 
         # if filename:
         #     # print(filename)
@@ -80,7 +85,7 @@ class MainWindow(QMainWindow):
     def do_bicubic(self):
         # do bicubic interpolation:
         # assume label1 is the input QLabel and label2 is the output QLabel
-        pixmap1 = self.labelInputImage.pixmap()
+        pixmap1 = self.labelResearchInputImage.pixmap()
         img1 = pixmap1.toImage()
         # upsample img1 using bicubic interpolation
         img2 = QImage(img1.width() * 2, img1.height() * 2, QImage.Format_Grayscale8)
