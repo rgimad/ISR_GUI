@@ -65,11 +65,15 @@ class MainWindow(QMainWindow):
         global main_window
         # main_window.labelResearchGTImage.setPixmap(roi_pixmap)
         
-
         main_window.labelResearchGTImage.setPixmap(QPixmap(QImage(roi.data, roi.shape[1], roi.shape[0], roi.shape[1], QImage.Format_Grayscale8)))
-
         main_window.saResearchGTImage.setWidget(main_window.labelResearchGTImage)
 
+        roi_downscaled = cv2.resize(roi, (roi.shape[1] // 2, roi.shape[0] // 2), interpolation = cv2.INTER_CUBIC)
+        roi_restored_bicubic = cv2.resize(roi_downscaled, (roi.shape[1], roi.shape[0]), interpolation = cv2.INTER_CUBIC)
+
+        main_window.labelResearchBicubicImage.setPixmap(QPixmap(QImage(roi_restored_bicubic.data, roi.shape[1], roi.shape[0], roi.shape[1], QImage.Format_Grayscale8)))
+        main_window.saResearchBicubicImage.setWidget(main_window.labelResearchBicubicImage)
+        
 
 
 
