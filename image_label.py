@@ -2,7 +2,7 @@ import numpy as np
 
 from PyQt5 import QtGui
 from PyQt5.QtGui import QPixmap, QImage, QCursor, QPainter, QPen
-from PyQt5.QtCore import Qt, QMimeData
+from PyQt5.QtCore import Qt, QMimeData, QRect
 from PyQt5.QtWidgets import QApplication, QLabel, QAction, QMenu, QSizePolicy
 
 class ImageLabel(QLabel):
@@ -98,7 +98,16 @@ class RoiImageLabel(ImageLabel):
     def mouseReleaseEvent(self, event):
         if not self.roi_choose_mode:
             return
-        self.roi_callback(event.x())
+        in_image_x = event.x() - self.scaled_pixmap_x - self.roi_scaled_size // 2
+        in_image_y = event.y() - self.scaled_pixmap_y - self.roi_scaled_size // 2
+        real_x = in_image_x * self.orig_pixmap.width() // self.scaled_pixmap.width()
+        real_y = in_image_y * self.orig_pixmap.height() // self.scaled_pixmap.height()
+        r = QRect(real_x, real_y, self.roi_real_size, self.roi_real_size)
+        img1 = self.orig_pixmap.toImage()
+        px2 = QPixmap.fromImage(img1.copy(r))
+        self.setPixmap(px2)
+        self.disableROIChoose()
+        # self.roi_callback(event.x())
 
 
 
