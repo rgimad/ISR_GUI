@@ -79,7 +79,8 @@ class MainWindow(QMainWindow):
 
         psnr_bicubic = psnr(roi, roi_restored_bicubic)
         ssim_bicubic = ssim(roi, roi_restored_bicubic)
-        print(f"psnr_bicub = {psnr_bicubic}, ssim_bicub = {ssim_bicubic}")
+        # print(f"psnr_bicub = {psnr_bicubic}, ssim_bicub = {ssim_bicubic}")
+        main_window.lbResearchBicubicMetrics.setText(f"PSNR: {psnr_bicubic:.2f} dB\nSSIM: {ssim_bicubic:.4f}")
 
         # err = mean_squared_error(roi, roi_restored_bicubic)
         # psnr2 = 10 * np.log10((255 ** 2) / err)
