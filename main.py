@@ -68,20 +68,20 @@ class MainWindow(QMainWindow):
         main_window.labelResearchGTImage.setPixmap(QPixmap(QImage(roi.data, roi.shape[1], roi.shape[0], roi.shape[1], QImage.Format_Grayscale8)))
         main_window.saResearchGTImage.setWidget(main_window.labelResearchGTImage)
 
-        roi_downscaled = cv2.resize(roi, (roi.shape[1] // 2, roi.shape[0] // 2), interpolation = cv2.INTER_CUBIC)
+        cur_scale = main_window.research_get_current_scale()
+        roi_downscaled = cv2.resize(roi, (roi.shape[1] // cur_scale, roi.shape[0] // cur_scale), interpolation = cv2.INTER_CUBIC)
         roi_restored_bicubic = cv2.resize(roi_downscaled, (roi.shape[1], roi.shape[0]), interpolation = cv2.INTER_CUBIC)
 
         main_window.labelResearchBicubicImage.setPixmap(QPixmap(QImage(roi_restored_bicubic.data, roi.shape[1], roi.shape[0], roi.shape[1], QImage.Format_Grayscale8)))
         main_window.saResearchBicubicImage.setWidget(main_window.labelResearchBicubicImage)
         
 
-
-
-    def get_current_model_name(self):
+    def research_get_current_model_name(self):
         return self.cbResearchChooseModel.currentText().lower() + "_ir_" + ("x2" if self.rbResearch_x2.isChecked() else "x4") + ".pth.tar"
 
     
-
+    def research_get_current_scale(self):
+        return 2 if self.rbResearch_x2.isChecked() else 4
 
 
 if __name__ == '__main__':
