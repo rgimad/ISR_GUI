@@ -60,11 +60,18 @@ class MainWindow(QMainWindow):
         self.saResearchInputImage.setWidget(self.labelResearchInputImage)
 
 
-    def roi_chosen_callback(obj, roi_pixmap):
+    def roi_chosen_callback(obj, roi):
         # print(f"callback1({x})")
         global main_window
-        main_window.labelResearchGTImage.setPixmap(roi_pixmap)
+        # main_window.labelResearchGTImage.setPixmap(roi_pixmap)
+        
+
+        main_window.labelResearchGTImage.setPixmap(QPixmap(QImage(roi.data, roi.shape[1], roi.shape[0], roi.shape[1], QImage.Format_Grayscale8)))
+
         main_window.saResearchGTImage.setWidget(main_window.labelResearchGTImage)
+
+
+
 
     def get_current_model_name(self):
         return self.cbResearchChooseModel.currentText().lower() + "_ir_" + ("x2" if self.rbResearch_x2.isChecked() else "x4") + ".pth.tar"
