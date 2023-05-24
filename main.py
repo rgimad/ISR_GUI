@@ -42,6 +42,8 @@ class MainWindow(QMainWindow):
 
         self.btnResearchChooseROI.clicked.connect(self.research_choose_roi)
 
+        self.cbResearchChooseModel.currentTextChanged.connect(self.research_model_changed)
+
         self.input_image_filename = None
         
         self.sr_models = dict()
@@ -80,6 +82,8 @@ class MainWindow(QMainWindow):
 
     def roi_chosen_callback(obj, roi_gt):
         global main_window
+
+        main_window.roi_gt = roi_gt.copy()
         
         main_window.labelResearchGTImage.setPixmap(QPixmap(QImage(roi_gt.data, roi_gt.shape[1], roi_gt.shape[0], roi_gt.shape[1], QImage.Format_Grayscale8)))
         main_window.saResearchGTImage.setWidget(main_window.labelResearchGTImage)
@@ -129,7 +133,7 @@ class MainWindow(QMainWindow):
         main_window.saResearchSRImage.setWidget(main_window.labelResearchSRImage)
 
         # Calculate metrics for SR
-        print(roi_gt.shape, roi_sr.shape)
+        # print(roi_gt.shape, roi_sr.shape)
         psnr_sr = psnr(roi_gt, roi_sr)
         ssim_sr = ssim(roi_gt, roi_sr)
         # print(f"psnr_sr = {psnr_sr}, ssim_sr = {ssim_sr}")
@@ -145,6 +149,9 @@ class MainWindow(QMainWindow):
     
     def research_get_current_scale(self):
         return 2 if self.rbResearch_x2.isChecked() else 4
+    
+    def research_model_changed(self):
+        self.roi_chosen_callback(self.roi_gt)
 
 
 if __name__ == '__main__':
