@@ -49,7 +49,8 @@ class MainWindow(QMainWindow):
         print(f"torch device is {self.torch_device}")
 
     def research_choose_roi(self):
-        self.labelResearchInputImage.enableROIChoose()
+        if self.labelResearchInputImage.pixmap() != None:
+            self.labelResearchInputImage.enableROIChoose()
 
     def research_process_input_image(self):
         # print(self.get_current_model_name())
