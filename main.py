@@ -45,6 +45,7 @@ class MainWindow(QMainWindow):
         self.cbResearchChooseModel.currentTextChanged.connect(self.research_model_changed)
 
         self.input_image_filename = None
+        self.roi_gt = None
         
         self.sr_models = dict()
 
@@ -151,7 +152,8 @@ class MainWindow(QMainWindow):
         return 2 if self.rbResearch_x2.isChecked() else 4
     
     def research_model_changed(self):
-        self.roi_chosen_callback(self.roi_gt)
+        if self.roi_gt != None:
+            self.roi_chosen_callback(self.roi_gt)
 
 
 if __name__ == '__main__':
