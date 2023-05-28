@@ -422,8 +422,8 @@ SSIM:</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>658</width>
+             <height>494</height>
             </rect>
            </property>
           </widget>
@@ -513,22 +513,17 @@ SSIM:</string>
              </property>
              <item>
               <property name="text">
-               <string>FSRCNN_x2</string>
+               <string>FSRCNN</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>VDSR_x2</string>
+               <string>VDSR</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>EDSR_x2</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>SRGAN_x2</string>
+               <string>EDSR</string>
               </property>
              </item>
             </widget>
@@ -560,8 +555,8 @@ SSIM:</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>658</width>
+             <height>494</height>
             </rect>
            </property>
           </widget>

@@ -28,11 +28,8 @@ class ImageLabel(QLabel):
             mimeData.setImageData(self.pixmap().toImage())
             QApplication.clipboard().setMimeData(mimeData)
 
-    def setPixmapFromGrayscaleNormNumpy(self):
-        output_img = (output_img * 255.0).astype(np.uint8) # Clip and convert to uint8
-        height, width = output_img.shape
-        bytesPerLine = width
-        qImg = QImage(output_img.data, width, height, bytesPerLine, QImage.Format_Grayscale8)
+    def setPixmapFromGrayscaleNumpy(self, img):
+        qImg = QImage(img.data, img.shape[1], img.shape[0], img.shape[1], QImage.Format_Grayscale8)
         pixmap = QPixmap(qImg)
         self.setPixmap(pixmap)
 

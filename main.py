@@ -35,17 +35,20 @@ class MainWindow(QMainWindow):
         self.labelResearchBicubicImage = ImageLabel()
         self.labelResearchSRImage = ImageLabel()
         self.labelResearchGTImage = ImageLabel()
+        self.labelProductionInputImage = ImageLabel()
+        self.labelProductionSRImage = ImageLabel()
 
         self.btnResearchChooseImage.clicked.connect(self.research_process_input_image)
-        # self.btnSaveResult.clicked.connect(self.save_output_image)
-        # self.btnDoSR.clicked.connect(self.do_super_resolution)
+        self.btnProductionChooseImage.clicked.connect(self.production_process_input_image)
 
         self.btnResearchChooseROI.clicked.connect(self.research_choose_roi)
 
         self.cbResearchChooseModel.currentTextChanged.connect(self.research_model_changed)
+        self.cbProductionChooseModel.currentTextChanged.connect(self.production_model_changed)
 
         self.input_image_filename = None
         self.roi_gt = None
+        self.prod_input = None
         
         self.sr_models = dict()
 
@@ -57,14 +60,43 @@ class MainWindow(QMainWindow):
             self.labelResearchInputImage.enableROIChoose()
 
     def research_process_input_image(self):
-        # print(self.get_current_model_name())
-
         self.input_image_filename, _ = QFileDialog.getOpenFileName(self, "Выбрать изображение", "", "Изображения (*.png *.jpg *.bmp)")
         if self.input_image_filename == "":
             return
 
         self.labelResearchInputImage.loadImage(self.input_image_filename, self.saResearchInputImage.width() - 5, self.saResearchInputImage.height() - 5, round_to_multiple(self.saResearchGTImage.width() - 10, 4))
         self.saResearchInputImage.setWidget(self.labelResearchInputImage)
+
+    def production_process_input_image(self):
+        self.input_image_filename, _ = QFileDialog.getOpenFileName(self, "Выбрать изображение", "", "Изображения (*.png *.jpg *.bmp)")
+        if self.input_image_filename == "":
+            return
+        self.prod_input = cv2.imread(self.input_image_filename, cv2.IMREAD_GRAYSCALE)
+        self.labelProductionInputImage.setPixmapFromGrayscaleNumpy(self.prod_input)
+        self.saProductionInputImage.setWidget(self.labelProductionInputImage)
+
+        self.production_perform_sr()
+
+    def production_perform_sr(self):
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+        cur_scale = main_window.production_get_current_scale()
+        model_name, model_fname = self.production_get_current_model_name()
+        self.load_model(model_name, model_fname, cur_scale)
+
+        # Inference
+        if model_name == "VDSR": # For pre-upsampling methods we pass bicubic interpolated to the model
+            bicub = cv2.resize(self.prod_input, (self.prod_input.shape[1] * cur_scale, self.prod_input.shape[0] * cur_scale), interpolation = cv2.INTER_CUBIC)
+            sr = main_window.model_inference(main_window.sr_models[model_fname], bicub)
+        else: # For post upsampling methods we pass LR to the model
+            sr = main_window.model_inference(main_window.sr_models[model_fname], self.prod_input)
+
+        # print(sr)
+        # px = QPixmap(QImage(sr.data, sr.shape[1], sr.shape[0], sr.shape[1], QImage.Format_Grayscale8))
+        # print(px)
+        self.labelProductionSRImage.setPixmapFromGrayscaleNumpy(sr)
+        self.saProductionSRImage.setWidget(self.labelProductionSRImage)
+
+        QApplication.restoreOverrideCursor()
 
     
     def model_inference(self, model, img):
@@ -105,24 +137,7 @@ class MainWindow(QMainWindow):
         QApplication.setOverrideCursor(Qt.WaitCursor)
 
         model_name, model_fname = main_window.research_get_current_model_name()
-
-        # Load model and weight if not loaded yet
-        if model_fname not in main_window.sr_models:
-            if model_name == "FSRCNN":
-                main_window.sr_models[model_fname] = FSRCNN(cur_scale)
-            elif model_name == "EDSR":
-                main_window.sr_models[model_fname] = EDSR(cur_scale)
-            elif model_name == "VDSR":
-                main_window.sr_models[model_fname] = VDSR()
-            else:
-                print("Unknown model")
-
-            main_window.sr_models[model_fname].load_state_dict(torch.load(model_fname, map_location=('cpu' if main_window.torch_device.type != 'cuda' else None))['state_dict'])
-            main_window.sr_models[model_fname].to(main_window.torch_device)
-            main_window.sr_models[model_fname].eval()
-            print(f"Model {model_fname} loaded and ready")
-        else:
-            pass
+        main_window.load_model(model_name, model_fname, cur_scale)
 
         # Inference
         if model_name == "VDSR": # For pre-upsampling methods we pass bicubic interpolated to the model
@@ -142,18 +157,46 @@ class MainWindow(QMainWindow):
 
         QApplication.restoreOverrideCursor()
 
+    def load_model(self, model_name, model_fname, scale):
+        # Load model and weight if not loaded yet
+        if model_fname not in main_window.sr_models:
+            if model_name == "FSRCNN":
+                main_window.sr_models[model_fname] = FSRCNN(scale)
+            elif model_name == "EDSR":
+                main_window.sr_models[model_fname] = EDSR(scale)
+            elif model_name == "VDSR":
+                main_window.sr_models[model_fname] = VDSR()
+            else:
+                print("Unknown model")
+
+            main_window.sr_models[model_fname].load_state_dict(torch.load(model_fname, map_location=('cpu' if main_window.torch_device.type != 'cuda' else None))['state_dict'])
+            main_window.sr_models[model_fname].to(main_window.torch_device)
+            main_window.sr_models[model_fname].eval()
+            print(f"Model {model_fname} loaded and ready")
+        else:
+            pass
     
     def research_get_current_model_name(self):
         model_name = self.cbResearchChooseModel.currentText()
         return model_name, model_name.lower() + "_ir_" + ("x2" if self.rbResearch_x2.isChecked() else "x4") + ".pth.tar"
-
     
+    def production_get_current_model_name(self):
+        model_name = self.cbProductionChooseModel.currentText()
+        return model_name, model_name.lower() + "_ir_" + ("x2" if self.rbProduction_x2.isChecked() else "x4") + ".pth.tar"
+
     def research_get_current_scale(self):
         return 2 if self.rbResearch_x2.isChecked() else 4
     
+    def production_get_current_scale(self):
+        return 2 if self.rbProduction_x2.isChecked() else 4
+    
     def research_model_changed(self):
-        if self.roi_gt != None:
+        if type(self.roi_gt) != type(None):
             self.roi_chosen_callback(self.roi_gt)
+
+    def production_model_changed(self):
+        if type(self.prod_input) != type(None):
+            self.production_perform_sr()
 
 
 if __name__ == '__main__':
