@@ -59,8 +59,8 @@
         <widget class="QRadioButton" name="rbResearch_x2">
          <property name="geometry">
           <rect>
-           <x>101</x>
-           <y>21</y>
+           <x>280</x>
+           <y>30</y>
            <width>40</width>
            <height>23</height>
           </rect>
@@ -81,8 +81,8 @@
         <widget class="QRadioButton" name="rbResearch_x4">
          <property name="geometry">
           <rect>
-           <x>147</x>
-           <y>21</y>
+           <x>330</x>
+           <y>30</y>
            <width>40</width>
            <height>23</height>
           </rect>
@@ -100,8 +100,8 @@
         <widget class="QComboBox" name="cbResearchChooseModel">
          <property name="geometry">
           <rect>
-           <x>10</x>
-           <y>20</y>
+           <x>80</x>
+           <y>30</y>
            <width>85</width>
            <height>25</height>
           </rect>
@@ -356,7 +356,7 @@
          <property name="geometry">
           <rect>
            <x>210</x>
-           <y>20</y>
+           <y>430</y>
            <width>161</width>
            <height>31</height>
           </rect>
@@ -405,6 +405,32 @@ SSIM:</string>
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
          </property>
         </widget>
+        <widget class="QLabel" name="label">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>30</y>
+           <width>81</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Модель:</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_2">
+         <property name="geometry">
+          <rect>
+           <x>180</x>
+           <y>30</y>
+           <width>91</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Увеличение:</string>
+         </property>
+        </widget>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_2">
@@ -422,8 +448,8 @@ SSIM:</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>658</width>
-             <height>494</height>
+             <width>19</width>
+             <height>16</height>
             </rect>
            </property>
           </widget>
@@ -555,8 +581,8 @@ SSIM:</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>658</width>
-             <height>494</height>
+             <width>19</width>
+             <height>16</height>
             </rect>
            </property>
           </widget>
