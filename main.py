@@ -17,6 +17,7 @@ from image_label import ImageLabel, RoiImageLabel
 from fsrcnn_ir_model import FSRCNN
 from vdsr_ir_model import VDSR
 from edsr_ir_model import EDSR
+from espcn_ir_model import ESPCN
 
 from utils import round_to_multiple
 
@@ -44,7 +45,9 @@ class MainWindow(QMainWindow):
         self.btnResearchChooseROI.clicked.connect(self.research_choose_roi)
 
         self.cbResearchChooseModel.currentTextChanged.connect(self.research_model_changed)
+        self.rbResearch_x2.toggled.connect(self.research_model_changed)
         self.cbProductionChooseModel.currentTextChanged.connect(self.production_model_changed)
+        self.rbProduction_x2.toggled.connect(self.production_model_changed)
 
         self.input_image_filename = None
         self.roi_gt = None
@@ -166,6 +169,8 @@ class MainWindow(QMainWindow):
                 main_window.sr_models[model_fname] = EDSR(scale)
             elif model_name == "VDSR":
                 main_window.sr_models[model_fname] = VDSR()
+            elif model_name == "ESPCN":
+                main_window.sr_models[model_fname] = ESPCN(scale)
             else:
                 print("Unknown model")
 
