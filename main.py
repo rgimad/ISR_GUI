@@ -18,6 +18,7 @@ from fsrcnn_ir_model import FSRCNN
 from vdsr_ir_model import VDSR
 from edsr_ir_model import EDSR
 from espcn_ir_model import ESPCN
+from srgan_ir_model import SRGAN
 
 from utils import round_to_multiple
 
@@ -125,6 +126,7 @@ class MainWindow(QMainWindow):
         main_window.saResearchGTImage.setWidget(main_window.labelResearchGTImage)
 
         cur_scale = main_window.research_get_current_scale()
+        # roi_tmp = cv2.resize(roi_gt, (roi_gt.shape[1] // 5, roi_gt.shape[0] // 5), interpolation = cv2.INTER_CUBIC)
         roi_lr = cv2.resize(roi_gt, (roi_gt.shape[1] // cur_scale, roi_gt.shape[0] // cur_scale), interpolation = cv2.INTER_CUBIC)
         roi_bicubic = cv2.resize(roi_lr, (roi_gt.shape[1], roi_gt.shape[0]), interpolation = cv2.INTER_CUBIC)
 
@@ -147,6 +149,7 @@ class MainWindow(QMainWindow):
             roi_sr = main_window.model_inference(main_window.sr_models[model_fname], roi_bicubic)
         else: # For post upsampling methods we pass LR to the model
             roi_sr = main_window.model_inference(main_window.sr_models[model_fname], roi_lr)
+            # print(roi_lr.shape, roi_sr.shape)
 
         main_window.labelResearchSRImage.setPixmap(QPixmap(QImage(roi_sr.data, roi_sr.shape[1], roi_sr.shape[0], roi_sr.shape[1], QImage.Format_Grayscale8)))
         main_window.saResearchSRImage.setWidget(main_window.labelResearchSRImage)
@@ -172,6 +175,7 @@ class MainWindow(QMainWindow):
             elif model_name == "ESPCN":
                 main_window.sr_models[model_fname] = ESPCN(scale)
             else:
+                main_window.sr_models[model_fname] = SRGAN(scale)
                 print("Unknown model")
 
             main_window.sr_models[model_fname].load_state_dict(torch.load(model_fname, map_location=('cpu' if main_window.torch_device.type != 'cuda' else None))['state_dict'])
