@@ -50,7 +50,8 @@ class MainWindow(QMainWindow):
         self.cbProductionChooseModel.currentTextChanged.connect(self.production_model_changed)
         self.rbProduction_x2.toggled.connect(self.production_model_changed)
 
-        self.input_image_filename = None
+        self.research_input_image_filename = ""
+        self.prod_input_image_filename = ""
         self.roi_gt = None
         self.prod_input = None
         
@@ -64,19 +65,20 @@ class MainWindow(QMainWindow):
             self.labelResearchInputImage.enableROIChoose()
 
     def research_process_input_image(self):
-        self.input_image_filename, _ = QFileDialog.getOpenFileName(self, "Выбрать изображение", "", "Изображения (*.png *.jpg *.bmp)")
-        if self.input_image_filename == "":
+        self.research_input_image_filename, _ = QFileDialog.getOpenFileName(self, "Выбрать изображение", "", "Изображения (*.png *.jpg *.bmp)")
+        if self.research_input_image_filename == "":
             return
 
-        self.labelResearchInputImage.loadImage(self.input_image_filename, self.saResearchInputImage.width() - 5, self.saResearchInputImage.height() - 5, round_to_multiple(self.saResearchGTImage.width() - 10, 4))
+        self.labelResearchInputImage.loadImage(self.research_input_image_filename, self.saResearchInputImage.width() - 5, self.saResearchInputImage.height() - 5, round_to_multiple(self.saResearchGTImage.width() - 10, 4))
         self.saResearchInputImage.setWidget(self.labelResearchInputImage)
 
     def production_process_input_image(self):
-        self.input_image_filename, _ = QFileDialog.getOpenFileName(self, "Выбрать изображение", "", "Изображения (*.png *.jpg *.bmp)")
-        if self.input_image_filename == "":
+        self.prod_input_image_filename, _ = QFileDialog.getOpenFileName(self, "Выбрать изображение", "", "Изображения (*.png *.jpg *.bmp)")
+        if self.prod_input_image_filename == "":
             return
-        self.prod_input = cv2.imread(self.input_image_filename, cv2.IMREAD_GRAYSCALE)
+        self.prod_input = cv2.imread(self.prod_input_image_filename, cv2.IMREAD_GRAYSCALE)
         self.labelProductionInputImage.setPixmapFromGrayscaleNumpy(self.prod_input)
+        self.labelProductionInputImage.setToolTip("Файл: " + self.prod_input_image_filename + f"\nРазрешение: {self.prod_input.shape[1]}x{self.prod_input.shape[0]}")
         self.saProductionInputImage.setWidget(self.labelProductionInputImage)
 
         self.production_perform_sr()

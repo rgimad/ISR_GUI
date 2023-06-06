@@ -14,6 +14,7 @@ class ImageLabel(QLabel):
         self.customContextMenuRequested.connect(self.showContextMenu)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setAlignment(Qt.AlignCenter)
+        self.image_name = "image"
 
     def showContextMenu(self, pos):
         menu = QMenu()
@@ -33,9 +34,12 @@ class ImageLabel(QLabel):
 
     def saveImage(self):
         if self.pixmap():
-            filename, _ = QFileDialog.getSaveFileName(self, "Сохранить изображение", "file", "PNG (*.png);;JPG (*.jpg *.jpeg);;BMP (*.bmp)")
+            filename, _ = QFileDialog.getSaveFileName(self, "Сохранить изображение", self.image_name, "PNG (*.png);;JPG (*.jpg *.jpeg);;BMP (*.bmp)")
             if filename != "":
                 self.pixmap().save(filename)
+
+    def setImageName(self, image_name):
+        self.image_name = image_name
 
     def setPixmapFromGrayscaleNumpy(self, img):
         qImg = QImage(img.data, img.shape[1], img.shape[0], img.shape[1], QImage.Format_Grayscale8)
@@ -70,6 +74,7 @@ class RoiImageLabel(ImageLabel):
         self.roi_real_size = roi_real_size
         self.roi_scaled_size = roi_real_size * self.scaled_pixmap.width() // self.orig_pixmap.width()
         self.setPixmap(self.scaled_pixmap)
+        self.setToolTip("Файл: " + image_path + f"\nРазрешение: {self.orig_numpy.shape[1]}x{self.orig_numpy.shape[0]}")
 
 
     def mouseMoveEvent(self, event):
