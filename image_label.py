@@ -4,7 +4,7 @@ import cv2
 from PyQt5 import QtGui
 from PyQt5.QtGui import QPixmap, QImage, QCursor, QPainter, QPen
 from PyQt5.QtCore import Qt, QMimeData, QRect
-from PyQt5.QtWidgets import QApplication, QLabel, QAction, QMenu, QSizePolicy
+from PyQt5.QtWidgets import QApplication, QLabel, QAction, QMenu, QSizePolicy, QFileDialog
 
 class ImageLabel(QLabel):
     def __init__(self, parent=None):
@@ -19,7 +19,10 @@ class ImageLabel(QLabel):
         menu = QMenu()
         copyAction = QAction("Копировать", self)
         copyAction.triggered.connect(self.copyImage)
+        saveAction = QAction("Сохранить", self)
+        saveAction.triggered.connect(self.saveImage)
         menu.addAction(copyAction)
+        menu.addAction(saveAction)
         menu.exec_(QCursor.pos())
 
     def copyImage(self):
@@ -27,6 +30,12 @@ class ImageLabel(QLabel):
             mimeData = QMimeData()
             mimeData.setImageData(self.pixmap().toImage())
             QApplication.clipboard().setMimeData(mimeData)
+
+    def saveImage(self):
+        if self.pixmap():
+            filename, _ = QFileDialog.getSaveFileName(self, "Сохранить изображение", "file", "PNG (*.png);;JPG (*.jpg *.jpeg);;BMP (*.bmp)")
+            if filename != "":
+                self.pixmap().save(filename)
 
     def setPixmapFromGrayscaleNumpy(self, img):
         qImg = QImage(img.data, img.shape[1], img.shape[0], img.shape[1], QImage.Format_Grayscale8)
