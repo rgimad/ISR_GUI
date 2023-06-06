@@ -100,6 +100,8 @@ class MainWindow(QMainWindow):
         # px = QPixmap(QImage(sr.data, sr.shape[1], sr.shape[0], sr.shape[1], QImage.Format_Grayscale8))
         # print(px)
         self.labelProductionSRImage.setPixmapFromGrayscaleNumpy(sr)
+        self.labelProductionSRImage.setToolTip(f"{sr.shape[1]}x{sr.shape[0]}")
+        self.labelProductionSRImage.setImageName(os.path.basename(self.prod_input_image_filename) + "_" + self.production_get_current_model_name()[0].lower() + "_x" + str(cur_scale))
         self.saProductionSRImage.setWidget(self.labelProductionSRImage)
 
         QApplication.restoreOverrideCursor()
@@ -125,6 +127,9 @@ class MainWindow(QMainWindow):
         main_window.roi_gt = roi_gt.copy()
         
         main_window.labelResearchGTImage.setPixmap(QPixmap(QImage(roi_gt.data, roi_gt.shape[1], roi_gt.shape[0], roi_gt.shape[1], QImage.Format_Grayscale8)))
+        main_window.labelResearchGTImage.setToolTip(f"{roi_gt.shape[1]}x{roi_gt.shape[0]}")
+        main_window.labelResearchBicubicImage.setToolTip(f"{roi_gt.shape[1]}x{roi_gt.shape[0]}")
+        main_window.labelResearchSRImage.setToolTip(f"{roi_gt.shape[1]}x{roi_gt.shape[0]}")
         main_window.saResearchGTImage.setWidget(main_window.labelResearchGTImage)
 
         cur_scale = main_window.research_get_current_scale()
