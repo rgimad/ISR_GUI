@@ -55,15 +55,18 @@ class RoiImageLabel(ImageLabel):
         self.roi_choose_mode = False
         self.in_image_x = 0
         self.in_image_y = 0
+        self.tool_tip_text = ""
 
     def setROICallback(self, roi_callback):
         self.roi_callback = roi_callback
 
     def enableROIChoose(self):
         self.roi_choose_mode = True
+        self.setToolTip("")
 
     def disableROIChoose(self):
         self.roi_choose_mode = False
+        self.setToolTip(self.tool_tip_text)
 
     def loadImage(self, image_path, scaled_maxwidth, scaled_maxheight, roi_real_size):
         self.orig_pixmap = QPixmap.fromImage(QPixmap.toImage(QPixmap(image_path)).convertToFormat(QtGui.QImage.Format_Grayscale8))
@@ -74,8 +77,8 @@ class RoiImageLabel(ImageLabel):
         self.roi_real_size = roi_real_size
         self.roi_scaled_size = roi_real_size * self.scaled_pixmap.width() // self.orig_pixmap.width()
         self.setPixmap(self.scaled_pixmap)
-        self.setToolTip("Файл: " + image_path + f"\nРазрешение: {self.orig_numpy.shape[1]}x{self.orig_numpy.shape[0]}")
-
+        self.tool_tip_text = "Файл: " + image_path + f"\nРазрешение: {self.orig_numpy.shape[1]}x{self.orig_numpy.shape[0]}"
+        self.setToolTip(self.tool_tip_text)
 
     def mouseMoveEvent(self, event):
         if not self.roi_choose_mode:
