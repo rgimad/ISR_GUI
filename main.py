@@ -50,6 +50,9 @@ class MainWindow(QMainWindow):
         self.cbProductionChooseModel.currentTextChanged.connect(self.production_model_changed)
         self.rbProduction_x2.toggled.connect(self.production_model_changed)
 
+        self.actionShowHelp.triggered.connect(self.show_help)
+        self.actionAbout.triggered.connect(self.show_about)
+
         self.research_input_image_filename = ""
         self.prod_input_image_filename = ""
         self.roi_gt = None
@@ -59,6 +62,12 @@ class MainWindow(QMainWindow):
 
         self.torch_device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         print(f"torch device is {self.torch_device}")
+
+    def show_help(self):
+        QMessageBox.information(self, "Справка", "Выберите модель из выпадающего списка и коэффициент увеличения разрешения - 2 или 4.\n\nЗатем выберите изображение. В режиме исследования, дополнительно, выберите интересующий фрагмент изображения. Ждите появления результирующих изображений на форме.\n\nПолученные изображения можно копировать в буфер обмена или сохранить в файл, кликнув по ним правой кнопкой мыши и выбрав Копировать/Сохранить.")
+
+    def show_about(self):
+        QMessageBox.information(self, "О программе", "Infrared Super Resolution, Рустем Гимадутдинов, 2022-2023")
 
     def research_choose_roi(self):
         if self.labelResearchInputImage.pixmap() != None:

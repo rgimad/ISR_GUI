@@ -643,18 +643,18 @@ SSIM:</string>
     <property name="title">
      <string>Справка</string>
     </property>
-    <addaction name="action"/>
-    <addaction name="action_2"/>
+    <addaction name="actionShowHelp"/>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action">
+  <action name="actionShowHelp">
    <property name="text">
     <string>Показать справку</string>
    </property>
   </action>
-  <action name="action_2">
+  <action name="actionAbout">
    <property name="text">
     <string>О программе</string>
    </property>
