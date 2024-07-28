@@ -1,6 +1,6 @@
 ## Infrared Super Resolution
 
-Infrared Super Resolution позволяет в интерактивном режиме улучшать ИК изображения.
+Infrared Super Resolution - приложение с графическим интерфейсом на `PyQt`, позволяющая в интерактивном режиме увеличивать разрешение ИК изображений и анализировать качество работы обученных ИИ моделей (`FSRCNN`, `VDSR`, `EDSR`, `ESCPCN`, `SRGAN`) на заданных фрагментах с помощью метрик `SSIM` и `PSNR`.
 
 ![Screen 1](screenshots/screen_1.png?raw=true "Screen 1")
 ![Screen 2](screenshots/screen_2.png?raw=true "Screen 2")
